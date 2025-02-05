@@ -1,0 +1,73 @@
+#!/bin/bash
+set -eu
+
+# Variables
+MULTIPLE_TAR="multipleforlinux.tar"
+MULTIPLE_DIR="multipleforlinux"
+MULTIPLE_CLI="./multiple-cli"
+MULTIPLE_NODE="./multiple-node"
+
+# Advertisement
+GREEN="\033[0;32m"
+RESET="\033[0m"
+echo -e "${GREEN}"
+echo " THIS SCRIPT IS PROUDLY CREATED BY **MaransCrypto**! "
+echo "Stay connected for updates:"
+echo " • Telegram: https://t.me/MaransCrypto"
+echo " • X (formerly Twitter): https://x.com/MaransCrypto"
+echo -e "${RESET}"
+
+# Installation and configuration process starts here
+echo "==========================================================="
+echo " Starting installation and configuration of Multiple Node "
+echo "==========================================================="
+
+# Download
+echo "Downloading Multiple for Linux..."
+if ! wget "https://cdn.app.multiple.cc/client/linux/x64/${MULTIPLE_TAR}"; then
+  echo "Error downloading ${MULTIPLE_TAR}. Exiting."
+  exit 1
+fi
+
+# Extraction
+echo "Extracting the installation package..."
+if ! tar -xvf "${MULTIPLE_TAR}"; then
+  echo "Error extracting ${MULTIPLE_TAR}. Exiting."
+  exit 1
+fi
+
+# Permissions
+echo "Setting permissions..."
+chmod -R 755 "${MULTIPLE_DIR}"  # More secure permissions
+chmod +x "${MULTIPLE_CLI}"
+chmod +x "${MULTIPLE_NODE}"
+
+# Navigation
+echo "Navigating to the extracted directory..."
+cd "${MULTIPLE_DIR}"
+
+# Add to PATH (User-specific - example)
+echo "Adding Multiple to PATH..."
+export PATH="$PATH:$(pwd)"  # Add current directory to PATH
+echo "export PATH=\"\$PATH:$(pwd)\"" >> ~/.bashrc  # Add to .bashrc (or .zshrc)
+source ~/.bashrc # Apply changes
+
+# Start Node
+echo "Starting the Multiple node..."
+nohup "${MULTIPLE_NODE}" > output.log 2>&1 &
+
+# Identifier Execution
+echo "Starting Identifier Execution..."
+curl -O https://raw.githubusercontent.com/abhiag/Gaia_Node/main/identifier.sh && chmod +x identifier.sh && ./identifier.sh
+echo "Identifier Execution Status: $?"
+
+# Completion
+echo "==========================================================="
+echo " Installation and configuration of Multiple Node completed!"
+echo " Powered by MaransCrypto!"
+echo ""
+echo " Stay connected for updates:"
+echo " • Telegram: https://t.me/MaransCrypto"
+echo " • X (formerly Twitter): https://x.com/MaransCrypto"
+echo ""
+echo "==========================================================="
